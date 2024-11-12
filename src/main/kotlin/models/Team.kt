@@ -1,10 +1,10 @@
 package ie.setu.models
 
 data class Team (
-    val Name: String,
-    val Manager: String,
-    val Captain: String,
-    val League: String,
-    val Trophies: Int,
+    val tName: String,
+    val manager: String,
+    val captain: String,
+    val league: String,
+    val trophies: Int,
 
 )
