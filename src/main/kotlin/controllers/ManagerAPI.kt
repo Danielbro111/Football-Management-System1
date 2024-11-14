@@ -4,9 +4,9 @@ import ie.setu.models.Player
 
 
 class ManagerAPI {
-    private var players = ArrayList<Player>()
+    var players = ArrayList<Player>()
 
-    fun addPlayer(player: Player): Boolean {
+    fun addPlayer(player: Player):  Boolean {
         return players.add(player)
 
     }
@@ -53,7 +53,34 @@ class ManagerAPI {
                 players[index]
 
             }
+
+
+    fun findPlayer(index: Int): Player? {
+        return if (isValidListIndex(index, players)) {
+            players[index]
+        } else null
+    }
+
+    fun updatePlayer(indexToUpdate: Int, players: Player?): Boolean {
+
+        val playerFound = findPlayer(indexToUpdate)
+
+
+        if ((playerFound  != null) && (players != null)) {
+            playerFound.name = players.name
+            playerFound.number = players.number
+            playerFound.height = players.height
+            playerFound.weight = players.weight
+            playerFound.position = players.position
+            playerFound.nationality = players.nationality
+            return true
         }
+        return false
+    }
+    }
+
+
+
 
 
 
