@@ -34,8 +34,9 @@ fun playerMenu() : Int {
         > |            ***Player Menu***             |
         > | 1 -> Add a Player                        |
         > | 2 -> Remove a Player                     |
-        > | 3 -> Update a Player                     |
-        > | 4 -> Show a player (Using Player Number) |
+        > | 3 -> Show all Players                   |
+        > | 4 -> Show a player (Using Index Number) |
+        > | 5 -> Update a Player                     |
         > | 5 -> Show all Players                    |
         > |                                          |
         > | 6 -> Save a Player                       |                                                        
@@ -86,8 +87,8 @@ fun doPlayer() {
 
             1 -> addPlayer()
             2 -> removePlayer()
-
-
+            3 -> listAllPlayers()
+            4 -> listPlayerbyIndex()
 
             0 -> logOut()
             else -> println(
@@ -127,4 +128,17 @@ fun removePlayer() {
 fun logOut() {
     println("Logging out")
     exit(0)
+}
+
+fun listAllPlayers() {
+    ManagerAPI.listAllPlayers()
+}
+
+
+fun listPlayerbyIndex()  {
+    val index = readNextInt("Enter the Players index you want to display:")
+    val printPlayer = ManagerAPI.listPlayerbyIndex(index)
+    println()
+    println(printPlayer)
+    println()
 }
