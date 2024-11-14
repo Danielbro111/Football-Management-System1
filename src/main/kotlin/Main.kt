@@ -34,10 +34,9 @@ fun playerMenu() : Int {
         > |            ***Player Menu***             |
         > | 1 -> Add a Player                        |
         > | 2 -> Remove a Player                     |
-        > | 3 -> Show all Players                   |
-        > | 4 -> Show a player (Using Index Number) |
+        > | 3 -> Show all Players                    |
+        > | 4 -> Show a player (Using Index Number)  |
         > | 5 -> Update a Player                     |
-        > | 5 -> Show all Players                    |
         > |                                          |
         > | 6 -> Save a Player                       |                                                        
         > |__________________________________________|  
@@ -89,6 +88,7 @@ fun doPlayer() {
             2 -> removePlayer()
             3 -> listAllPlayers()
             4 -> listPlayerbyIndex()
+            5 -> updatePlayer()
 
             0 -> logOut()
             else -> println(
@@ -103,7 +103,7 @@ fun doPlayer() {
 
 fun addPlayer() {
     val name = readNextLine("Enter the Players name:")
-    val number = readNextLine("Enter the Players number:")
+    val number = readNextInt("Enter the Players number:")
     val height = readNextDouble("Enter the Players height (Metres):")
     val weight = readNextDouble("Enter the Players weight (Kilogram):")
     val position = readNextLine("Enter the Players position:")
@@ -141,4 +141,33 @@ fun listPlayerbyIndex()  {
     println()
     println(printPlayer)
     println()
+
+}
+
+fun updatePlayer() {
+    listAllPlayers()
+
+    val indexToUpdate: Int = readNextInt("Enter the index of the note to update: ")
+    if (ManagerAPI.isValidListIndex(indexToUpdate, ManagerAPI.players)) {
+        val name = readNextLine("Enter the players name: ")
+        val number = readNextInt("Enter the Players number:")
+        val height = readNextDouble("Enter the Players height (Metres):")
+        val weight = readNextDouble("Enter the Players weight (Kilogram):")
+        val position = readNextLine("Enter the Players position:")
+        val nationality = readNextLine("Enter the Players nationality:")
+
+        if (ManagerAPI.updatePlayer(indexToUpdate, Player(name, number, height, weight, position, nationality))) {
+            println()
+            println("Update Successful")
+            println()
+        } else {
+            println()
+            println("Update Failed")
+            println()
+        }
+    } else {
+        println()
+        println("There are no Players for this index number")
+        println()
+    }
 }
