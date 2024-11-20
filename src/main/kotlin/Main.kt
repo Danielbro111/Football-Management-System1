@@ -2,10 +2,12 @@ package ie.setu
 import io.github.oshai.kotlinlogging.KotlinLogging
 import controllers.ManagerAPI
 import ie.setu.models.Player
+import ie.setu.models.Team
 import utils.readNextDouble
 import utils.readNextInt
 import utils.readNextLine
 import java.lang.System.exit
+
 
 
 private val logger = KotlinLogging.logger {}
@@ -18,17 +20,21 @@ fun main() {
 }
 
 fun mainMenu() : Int {
+    println()
     println( """
         > *********FOOTBALL MANAGEMENT SYSTEM*********         
         > |                                          |
         > | 1 -> Access Player Menu                  |                              
         > | 2 -> Access Team Menu                    |
+        > |                                          |   
+        > | 0 -> Logout                              |
         > |__________________________________________|  
     """.trimMargin(">"))
     return readNextInt(" > ==>>")
 }
 
 fun playerMenu() : Int {
+    println()
     println( """
         > ********FOOTBALL MANAGEMENT SYSTEM*********         
         > |            ***Player Menu***             |
@@ -38,47 +44,52 @@ fun playerMenu() : Int {
         > | 4 -> Show a player (Using Index Number)  |
         > | 5 -> Update a Player                     |
         > |                                          |
-        > | 6 -> Save a Player                       |                                                        
+        > | 0 -> Return to the MainMenu              |                                                        
         > |__________________________________________|  
           """.trimMargin(">"))
     return readNextInt(" > ==>>")
 }
 
 fun teamMenu() : Int {
+    println()
     println( """
         >  *******FOOTBALL MANAGEMENT SYSTEM********         
         > |            ***Team Menu***              |
-        > | 1 -> Add a team                         |
-        > | 2 -> Remove a team                      |
-        > | 3 -> Update a team                      |
-        > | 4 -> Show a team                        |
+        > | 1 -> Add your team                      |
+        > | 2 -> Remove your team                   |
+        > | 3 -> Show team info                     |
+        > | 4 -> Update your team                   |
         > | 5 -> Show all Teams                     |
         > |                                         |
-        > | 6 -> Save a team                        |
+        > | 0 -> Return to the MainMenu             |
         > |_________________________________________|                                       
           """.trimMargin(">"))
     return readNextInt(" > ==>>")
 }
-
-
 fun playMenu() {
     do {
         val option = mainMenu()
         when (option) {
 
             1 -> doPlayer()
-            //2 -> printTeam()
+            2 -> doTeam()
 
 
             3 -> logOut()
             else -> println(
-           """ | $option is an invalid option
+                """ | $option is an invalid option
                |   Please enter a valid option (1-2) """.trimMargin()
             )
         }
     } while (true)
 }
 
+fun logOut() {
+    println("Logging out")
+    exit(0)
+}
+
+///Player functions:
 fun doPlayer() {
     do {
         val option = playerMenu()
@@ -90,10 +101,10 @@ fun doPlayer() {
             4 -> listPlayerbyIndex()
             5 -> updatePlayer()
 
-            0 -> logOut()
+            0 -> return
             else -> println(
                 """ |   Invalid option entered: $option
-               |   Please enter a valid option (1-5)""".trimMargin()
+                    |   Please enter a valid option (1-5)""".trimMargin()
             )
         }
     } while (true)
@@ -125,13 +136,10 @@ fun removePlayer() {
     }
 }
 
-fun logOut() {
-    println("Logging out")
-    exit(0)
-}
-
 fun listAllPlayers() {
-    ManagerAPI.listAllPlayers()
+    val printAllPlayers = ManagerAPI.listAllPlayers()
+
+    println(printAllPlayers)
 }
 
 
@@ -147,7 +155,7 @@ fun listPlayerbyIndex()  {
 fun updatePlayer() {
     listAllPlayers()
 
-    val indexToUpdate: Int = readNextInt("Enter the index of the note to update: ")
+    val indexToUpdate = readNextInt("Enter the index of the note to update: ")
     if (ManagerAPI.isValidListIndex(indexToUpdate, ManagerAPI.players)) {
         val name = readNextLine("Enter the players name: ")
         val number = readNextInt("Enter the Players number:")
@@ -171,3 +179,56 @@ fun updatePlayer() {
         println()
     }
 }
+
+//Team functions:
+fun doTeam() {
+    do {
+        val option = teamMenu()
+        when (option) {
+
+            1 -> addTeam()
+            2 -> removeTeam()
+            3 -> listTeam()
+            4 -> listPlayerbyIndex()
+            5 -> updatePlayer()
+
+            0 -> return
+            else -> println(
+                """ |   Invalid option entered: $option
+                    |   Please enter a valid option (1-5)""".trimMargin()
+            )
+        }
+    } while (true)
+}
+
+        fun addTeam() {
+            val tName = readNextLine("Enter the teams name:")
+            val manager = readNextLine("Enter the Managers name:")
+            val captain = readNextLine("Enter the Captains name:")
+            val league = readNextLine("Enter current league name:")
+            val trophies = readNextInt("Enter the amount of trophies theyve won:")
+            val isAdded = ManagerAPI.addTeam(Team(tName, manager, captain, league, trophies))
+            if (isAdded) {
+                println("Team Added Successfully")
+                logger.info { "Team added: $tName by manager: $manager" }
+            } else {
+                println("Team has failed to be added")
+            }
+        }
+
+fun removeTeam() {
+    val isRemoved = ManagerAPI.removeTeam(0)
+
+    if (isRemoved) {
+        println("Team has been Removed Successfully")
+    } else {
+        println("Team has failed to be removed!")
+    }
+}
+
+    fun listTeam() {
+      val printTeam =  ManagerAPI.listTeam()
+
+        println(printTeam)
+    }
+
