@@ -2,11 +2,14 @@ package controllers
 
 import ie.setu.models.Player
 import ie.setu.models.Team
+import persistence.Serializer
 
 
-class ManagerAPI {
+class ManagerAPI(serializerType: Serializer) {
     var players = ArrayList<Player>()
     var teams = ArrayList<Team>()
+    private var serializer: Serializer = serializerType
+
 
     fun numberOfTeams() = teams.size
 
@@ -100,7 +103,7 @@ class ManagerAPI {
     fun numberOfPlayers() = players.size
 
 
-    fun listTeam(): Any  {
+    fun listTeam(): Any {
         return if (teams.isEmpty()) {
             println()
             "No teams found"
@@ -124,9 +127,18 @@ class ManagerAPI {
             println()
         }
     }
+
+
+    @Throws(Exception::class)
+    fun load() {
+        players = serializer.read() as ArrayList<Player>
+    }
+
+    @Throws(Exception::class)
+    fun store() {
+        serializer.write(players)
+    }
 }
-
-
 
 
 

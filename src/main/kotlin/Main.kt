@@ -3,16 +3,19 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import controllers.ManagerAPI
 import ie.setu.models.Player
 import ie.setu.models.Team
+import persistence.JSONSerializer
+import persistence.XMLSerializer
 import utils.readNextDouble
 import utils.readNextInt
 import utils.readNextLine
+import java.io.File
 import java.lang.System.exit
 
 
 
 private val logger = KotlinLogging.logger {}
-private val ManagerAPI = ManagerAPI()
-
+//private val ManagerAPI = ManagerAPI(XMLSerializer(File("notes.xml")))
+private val ManagerAPI = ManagerAPI(JSONSerializer(File("notes.json")))
 fun main() {
 
     playMenu()
@@ -43,6 +46,9 @@ fun playerMenu() : Int {
         > | 3 -> Show all Players                    |
         > | 4 -> Show a player (Using Index Number)  |
         > | 5 -> Update a Player                     |
+        > |                                          |
+        > | 6 -> Save a Player to the System         |
+        > | 7 -> Load a Player from the System       |
         > |                                          |
         > | 0 -> Return to the MainMenu              |                                                        
         > |__________________________________________|  
@@ -100,6 +106,9 @@ fun doPlayer() {
             3 -> listAllPlayers()
             4 -> listPlayerbyIndex()
             5 -> updatePlayer()
+
+            6 -> playerSave()
+            7 -> playerLoad()
 
             0 -> return
             else -> println(
@@ -232,3 +241,18 @@ fun removeTeam() {
         println(printTeam)
     }
 
+fun playerSave() {
+    try {
+        ManagerAPI.store()
+    } catch (e: Exception) {
+        System.err.println("Error writing to file: $e")
+    }
+}
+
+fun playerLoad() {
+    try {
+        ManagerAPI.load()
+    } catch (e: Exception) {
+        System.err.println("Error reading from file: $e")
+    }
+}
