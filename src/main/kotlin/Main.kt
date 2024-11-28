@@ -65,7 +65,8 @@ fun teamMenu() : Int {
         > | 2 -> Remove your team                   |
         > | 3 -> Show team info                     |
         > | 4 -> Update your team                   |
-        > | 5 -> Show all Teams                     |
+        > | 4 -> Add a player to your team          |
+        > | 5 -> Show all players on the team       |
         > |                                         |
         > | 0 -> Return to the MainMenu             |
         > |_________________________________________|                                       
@@ -198,8 +199,8 @@ fun doTeam() {
             1 -> addTeam()
             2 -> removeTeam()
             3 -> listTeam()
-            4 -> listPlayerbyIndex()
-            5 -> updatePlayer()
+            4 -> addPlayerToTeam()
+            5 -> listFullTeam()
 
             0 -> return
             else -> println(
@@ -240,6 +241,72 @@ fun removeTeam() {
 
         println(printTeam)
     }
+
+
+private fun addPlayerToTeam() {
+    if (ManagerAPI.teams.isNotEmpty()) {
+        val team = ManagerAPI.teams[0]
+        val name = readNextLine("Enter the Player's name:")
+        val number = readNextInt("Enter the Player's number:")
+        val height = readNextDouble("Enter the Player's height (Metres):")
+        val weight = readNextDouble("Enter the Player's weight (Kilograms):")
+        val position = readNextLine("Enter the Player's position:")
+        val nationality = readNextLine("Enter the Player's nationality:")
+        
+        val player = Player(name, number, height, weight, position, nationality)
+        val isAdded = ManagerAPI.addPlayerToTeam(team, player)
+
+        if (isAdded) {
+            println("Player added to team successfully!")
+        } else {
+            println("Failed to add player to team")
+        }
+    } else {
+        println("No team exists. Please create a team first.")
+    }
+}
+
+fun listFullTeam() {
+    if (ManagerAPI.teams.isEmpty()) {
+        println("No teams found.")
+        return
+    }
+
+    val team = ManagerAPI.teams[0]
+    println("""
+           > ***    Team Information    ***
+           > Team Name: ${team.tName.uppercase()}
+           > Manager: ${team.manager.uppercase()}
+           > Captain: ${team.captain.uppercase()}
+           > League: ${team.league.uppercase()}
+           > Trophies: ${team.trophies}
+           > Number of players: ${team.players.size}
+           >
+           > Players:
+""".trimMargin(">"))
+
+    if (team.players.isEmpty()) {
+        println("> No players are in the team.")
+    } else {
+        for (player in team.players) {
+    println("""
+                >       
+                >   Name: ${player.name.uppercase()}
+                >   Number: ${player.number}
+                >   Position: ${player.position.uppercase()}
+                >   Height: ${player.height} m
+                >   Weight: ${player.weight} kg
+                >   Nationality: ${player.nationality.uppercase()}
+                >   
+            """.trimMargin(">"))
+        }
+    }
+}
+
+
+
+
+
 
 fun playerSave() {
     try {
