@@ -129,6 +129,9 @@ class ManagerAPI(serializerType: Serializer) {
     }
 
 
+
+
+
     @Throws(Exception::class)
     fun load() {
         players = serializer.read() as ArrayList<Player>
@@ -138,6 +141,13 @@ class ManagerAPI(serializerType: Serializer) {
     fun store() {
         serializer.write(players)
     }
+
+
+    fun addPlayerToTeam(team: Team, player: Player): Boolean {
+        team.addPlayer(player)
+        return true
+    }
+
 }
 
 
