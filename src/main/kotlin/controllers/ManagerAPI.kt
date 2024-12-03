@@ -100,6 +100,17 @@ class ManagerAPI(serializerType: Serializer) {
         }
     }
 
+    fun updateTeam(index: Int, updatedTeam: Team): Boolean {
+        return if (index in teams.indices) {
+            teams[index] = updatedTeam
+            true
+        } else {
+            false
+        }
+    }
+
+
+
     fun numberOfPlayers() = players.size
 
 
@@ -130,6 +141,10 @@ class ManagerAPI(serializerType: Serializer) {
 
 
 
+    fun addPlayerToTeam(team: Team, player: Player): Boolean {
+        team.addPlayer(player)
+        return true
+    }
 
 
     @Throws(Exception::class)
@@ -141,20 +156,4 @@ class ManagerAPI(serializerType: Serializer) {
     fun store() {
         serializer.write(players)
     }
-
-
-    fun addPlayerToTeam(team: Team, player: Player): Boolean {
-        team.addPlayer(player)
-        return true
-    }
-
 }
-
-
-
-
-
-
-
-
-

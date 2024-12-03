@@ -14,14 +14,14 @@ import java.lang.System.exit
 
 
 private val logger = KotlinLogging.logger {}
-//private val ManagerAPI = ManagerAPI(XMLSerializer(File("notes.xml")))
-private val ManagerAPI = ManagerAPI(JSONSerializer(File("notes.json")))
+//private val ManagerAPI = ManagerAPI(XMLSerializer(File("TeamInformation .xml")))
+private val ManagerAPI = ManagerAPI(JSONSerializer(File("TeamInformation.json")))
 fun main() {
 
     playMenu()
 
 }
-
+///Menus:
 fun mainMenu() : Int {
     println()
     println( """
@@ -65,8 +65,8 @@ fun teamMenu() : Int {
         > | 2 -> Remove your team                   |
         > | 3 -> Show team info                     |
         > | 4 -> Update your team                   |
-        > | 4 -> Add a player to your team          |
-        > | 5 -> Show all players on the team       |
+        > | 5 -> Add a player to your team          |
+        > | 6 -> Show all players on the team       |
         > |                                         |
         > | 0 -> Return to the MainMenu             |
         > |_________________________________________|                                       
@@ -82,10 +82,10 @@ fun playMenu() {
             2 -> doTeam()
 
 
-            3 -> logOut()
+            0 -> logOut()
             else -> println(
                 """ | $option is an invalid option
-               |   Please enter a valid option (1-2) """.trimMargin()
+               |   Please enter a valid option (0-2) """.trimMargin()
             )
         }
     } while (true)
@@ -114,7 +114,7 @@ fun doPlayer() {
             0 -> return
             else -> println(
                 """ |   Invalid option entered: $option
-                    |   Please enter a valid option (1-5)""".trimMargin()
+                    |   Please enter a valid option (0-7)""".trimMargin()
             )
         }
     } while (true)
@@ -190,7 +190,7 @@ fun updatePlayer() {
     }
 }
 
-//Team functions:
+///Team functions:
 fun doTeam() {
     do {
         val option = teamMenu()
@@ -199,13 +199,14 @@ fun doTeam() {
             1 -> addTeam()
             2 -> removeTeam()
             3 -> listTeam()
-            4 -> addPlayerToTeam()
-            5 -> listFullTeam()
+            4 -> updateTeam()
+            5 -> addPlayerToTeam()
+            6 -> listFullTeam()
 
             0 -> return
             else -> println(
                 """ |   Invalid option entered: $option
-                    |   Please enter a valid option (1-5)""".trimMargin()
+                    |   Please enter a valid option (0-6)""".trimMargin()
             )
         }
     } while (true)
@@ -220,9 +221,12 @@ fun doTeam() {
             val isAdded = ManagerAPI.addTeam(Team(tName, manager, captain, league, trophies))
             if (isAdded) {
                 println("Team Added Successfully")
-                logger.info { "Team added: $tName by manager: $manager" }
+                println()
+                logger.info { """Team added: ${tName.uppercase()} 
+                                 Added by Manager: ${manager.uppercase()}
+                              """ }
             } else {
-                println("Team has failed to be added")
+                println("Team  failed to be added")
             }
         }
 
@@ -232,7 +236,7 @@ fun removeTeam() {
     if (isRemoved) {
         println("Team has been Removed Successfully")
     } else {
-        println("Team has failed to be removed!")
+        println("Team failed to be removed")
     }
 }
 
@@ -258,6 +262,13 @@ private fun addPlayerToTeam() {
 
         if (isAdded) {
             println("Player added to team successfully!")
+            println()
+            logger.info {
+                val manager = team.manager
+                """Player added: ${name.uppercase()} 
+                   Added by Manager: ${manager.uppercase()}
+                   Added to Team: ${team.tName.uppercase()}
+                """ }
         } else {
             println("Failed to add player to team")
         }
@@ -266,6 +277,32 @@ private fun addPlayerToTeam() {
     }
 }
 
+fun updateTeam() {
+    if (ManagerAPI.teams.isEmpty()) {
+        println("No teams found.")
+        return
+    }
+    listTeam()
+    println("Enter new team details:")
+    val tName = readNextLine("Enter the team's new name:")
+    val manager = readNextLine("Enter the new Manager's name:")
+    val captain = readNextLine("Enter the new Captain's name:")
+    val league = readNextLine("Enter new league name:")
+    val trophies = readNextInt("Enter the new amount of trophies they've won:")
+
+    val updatedTeam = Team(tName, manager, captain, league, trophies)
+    val isUpdated = ManagerAPI.updateTeam(0, updatedTeam)
+
+    if (isUpdated) {
+        println("Team updated successfully!")
+        println()
+        logger.info { """Team updated: $tName 
+                         Updated by Manager: $manager
+                      """ }
+    } else {
+        println("Failed to update team.")
+    }
+}
 fun listFullTeam() {
     if (ManagerAPI.teams.isEmpty()) {
         println("No teams found.")
