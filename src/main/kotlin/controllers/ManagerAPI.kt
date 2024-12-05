@@ -24,6 +24,27 @@ class ManagerAPI(serializerType: Serializer) {
         }
     }
 
+    fun getMostExpensivePlayerForTeam(teamIndex: Int): String {
+        if (teamIndex < 0 || teamIndex >= teams.size) {
+            return "Invalid team index: $teamIndex"
+        }
+
+        val team = teams[teamIndex]
+        val player = team.mostExpensivePlayer()
+
+        return if (player != null) {
+            """
+        |*** Most Expensive Player for ${team.tName.uppercase()} ***
+        | Name: ${player.name.uppercase()}
+        | Number: ${player.number}
+        | Position: ${player.position.uppercase()}
+        | Value: $${player.value} million
+        """.trimMargin()
+        } else {
+            "No players in the team: ${team.tName}"
+        }
+    }
+
     fun addPlayer(player: Player): Boolean {
         return players.add(player)
 
@@ -139,7 +160,7 @@ class ManagerAPI(serializerType: Serializer) {
        | League: ${team.league.uppercase()}                          
        | Trophies: ${team.trophies}    
        | Number of players: ${numberOfPlayers()}            
-    """.trimIndent()
+        """.trimIndent()
             }
             println()
             listAllTeams

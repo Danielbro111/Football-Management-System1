@@ -22,6 +22,11 @@ data class Team (
     fun calculateTeamValue(): Double {
         return players.sumOf { it.value}
     }
+
+    fun mostExpensivePlayer(): Player? {
+        return players.maxByOrNull { it.value }
+    }
+
 }
 
 

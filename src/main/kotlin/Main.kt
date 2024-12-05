@@ -67,7 +67,9 @@ fun teamMenu() : Int {
         > | 4 -> Update your team                   |
         > | 5 -> Add a player to your team          |
         > | 6 -> Show all players on the team       |
-        > | 7 -> Show team value                    |                   
+        > |                                         |
+        > | 7 -> Show team value                    |  
+        > | 8 -> Show the most expensive player     |                   
         > |                                         |
         > | 0 -> Return to the MainMenu             |
         > |_________________________________________|                                       
@@ -204,6 +206,7 @@ fun doTeam() {
             5 -> addPlayerToTeam()
             6 -> listFullTeam()
             7 -> showTeamValue()
+            8 -> MostExpensivePlayer()
 
             0 -> return
             else -> println(
@@ -324,6 +327,15 @@ fun showTeamValue() {
     }
 }
 
+
+fun MostExpensivePlayer() {
+    if (ManagerAPI.teams.isEmpty()) {
+        println("No teams available.")
+        return
+    }
+    val teamIndex = readNextInt("Enter the index of the team: ")
+    println(ManagerAPI.getMostExpensivePlayerForTeam(teamIndex))
+}
 
 
 
