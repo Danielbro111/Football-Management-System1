@@ -26,7 +26,7 @@ class ManagerAPI(serializerType: Serializer) {
 
     fun getMostExpensivePlayerForTeam(teamIndex: Int): String {
         if (teamIndex < 0 || teamIndex >= teams.size) {
-            return "Invalid team index"
+            return "Invalid team index: $teamIndex"
         }
 
         val team = teams[teamIndex]
