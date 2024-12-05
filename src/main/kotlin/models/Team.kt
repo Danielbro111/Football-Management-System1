@@ -1,5 +1,7 @@
 package ie.setu.models
 
+
+
 data class Team (
     var tName: String,
     var manager: String,
@@ -16,6 +18,9 @@ data class Team (
     fun addPlayer(player: Player): Boolean {
         player.number = getPlayerNumber()
         return players.add(player)
+    }
+    fun calculateTeamValue(): Double {
+        return players.sumOf { it.value}
     }
 }
 

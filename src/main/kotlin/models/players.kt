@@ -7,5 +7,6 @@ data class Player(
       var weight: Double,
       var position: String,
       var nationality: String,
+      var value: Double = 0.0,
 
       )

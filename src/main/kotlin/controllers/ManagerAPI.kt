@@ -11,7 +11,18 @@ class ManagerAPI(serializerType: Serializer) {
     private var serializer: Serializer = serializerType
 
 
+
+
     fun numberOfTeams() = teams.size
+
+
+    fun TeamTotalValue(index: Int): Double {
+        return if (isValidListIndex(index, teams)) {
+            teams[index].calculateTeamValue()
+        } else {
+            0.0
+        }
+    }
 
     fun addPlayer(player: Player): Boolean {
         return players.add(player)
@@ -183,6 +194,7 @@ fun findTeam(index: Int): Team? {
             }
         }
     }
+
 
 
 
