@@ -26,13 +26,13 @@ class ManagerAPI(serializerType: Serializer) {
         return (index >= 0 && index < list.size)
     }
 
-    fun removePlayer(index: Int): Boolean {
+    fun removePlayer(index: Int): Player? {
         return if (isValidListIndex(index, players)) {
             players.removeAt(index)
-            true
+
         } else {
             println("Invalid index: $index")
-            false
+            null
         }
 
     }
@@ -91,12 +91,11 @@ class ManagerAPI(serializerType: Serializer) {
     }
 
     //Team Functions
-    fun removeTeam(index: Int): Boolean {
+    fun removeTeam(index: Int): Team? {
         return if (index in teams.indices) {
             teams.removeAt(index)
-            true
         } else {
-            false
+            null
         }
     }
 
@@ -110,11 +109,10 @@ class ManagerAPI(serializerType: Serializer) {
     }
 
 
-
     fun numberOfPlayers() = players.size
 
 
-    fun listTeam(): Any {
+    fun listTeam(): String {
         return if (teams.isEmpty()) {
             println()
             "No teams found"
@@ -131,29 +129,74 @@ class ManagerAPI(serializerType: Serializer) {
        | Trophies: ${team.trophies}    
        | Number of players: ${numberOfPlayers()}            
     """.trimIndent()
-
             }
             println()
-            println(listAllTeams.trimMargin())
-            println()
+            listAllTeams
         }
     }
 
 
+fun findTeam(index: Int): Team? {
+    return if (isValidListIndex(index, teams)) {
+        teams[index]
+    } else null
+}
 
     fun addPlayerToTeam(team: Team, player: Player): Boolean {
         team.addPlayer(player)
         return true
     }
 
+    fun listFullTeam() {
+        if(teams.isEmpty()) {
+            println("No teams found.")
+            return
+        }
+
+        val team = teams[0]
+        println("""
+           > ***    Team Information    ***
+           > Team Name: ${team.tName.uppercase()}
+           > Manager: ${team.manager.uppercase()}
+           > Captain: ${team.captain.uppercase()}
+           > League: ${team.league.uppercase()}
+           > Trophies: ${team.trophies}
+           > Number of players: ${team.players.size}
+           >
+           > Players:
+""".trimMargin(">"))
+
+        if (team.players.isEmpty()) {
+            println("> No players are in the team.")
+        } else {
+            for (player in team.players) {
+                println("""
+                >       
+                >   Name: ${player.name.uppercase()}
+                >   Number: ${player.number}
+                >   Position: ${player.position.uppercase()}
+                >   Height: ${player.height} m
+                >   Weight: ${player.weight} kg
+                >   Nationality: ${player.nationality.uppercase()}
+                >   
+            """.trimMargin(">"))
+            }
+        }
+    }
+
+
 
     @Throws(Exception::class)
     fun load() {
         players = serializer.read() as ArrayList<Player>
+        teams = serializer.read() as ArrayList<Team>
+        println("loaded successfully.")
     }
 
     @Throws(Exception::class)
     fun store() {
         serializer.write(players)
+        serializer.write(teams)
+        println("saved successfully.")
     }
 }

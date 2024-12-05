@@ -108,8 +108,8 @@ fun doPlayer() {
             4 -> listPlayerbyIndex()
             5 -> updatePlayer()
 
-            6 -> playerSave()
-            7 -> playerLoad()
+            6 -> TeamSave()
+            7 -> TeamLoad()
 
             0 -> return
             else -> println(
@@ -141,15 +141,14 @@ fun removePlayer() {
    val index = readNextInt("Enter the Index of the player you wish to remove: ")
     val isRemoved = ManagerAPI.removePlayer(index)
 
-    if (isRemoved) {
+    if (isRemoved != null) {
         println("Player Removed Successfully")
     }
 }
 
 fun listAllPlayers() {
-    val printAllPlayers = ManagerAPI.listAllPlayers()
+    println(ManagerAPI.listAllPlayers())
 
-    println(printAllPlayers)
 }
 
 
@@ -223,7 +222,7 @@ fun doTeam() {
                 println("Team Added Successfully")
                 println()
                 logger.info { """Team added: ${tName.uppercase()} 
-                                 Added by Manager: ${manager.uppercase()}
+                           Added by Manager: ${manager.uppercase()}
                               """ }
             } else {
                 println("Team  failed to be added")
@@ -233,7 +232,7 @@ fun doTeam() {
 fun removeTeam() {
     val isRemoved = ManagerAPI.removeTeam(0)
 
-    if (isRemoved) {
+    if (isRemoved != null) {
         println("Team has been Removed Successfully")
     } else {
         println("Team failed to be removed")
@@ -297,55 +296,21 @@ fun updateTeam() {
         println("Team updated successfully!")
         println()
         logger.info { """Team updated: $tName 
-                         Updated by Manager: $manager
+                   Updated by Manager: $manager
                       """ }
     } else {
         println("Failed to update team.")
     }
 }
+
 fun listFullTeam() {
-    if (ManagerAPI.teams.isEmpty()) {
-        println("No teams found.")
-        return
-    }
-
-    val team = ManagerAPI.teams[0]
-    println("""
-           > ***    Team Information    ***
-           > Team Name: ${team.tName.uppercase()}
-           > Manager: ${team.manager.uppercase()}
-           > Captain: ${team.captain.uppercase()}
-           > League: ${team.league.uppercase()}
-           > Trophies: ${team.trophies}
-           > Number of players: ${team.players.size}
-           >
-           > Players:
-""".trimMargin(">"))
-
-    if (team.players.isEmpty()) {
-        println("> No players are in the team.")
-    } else {
-        for (player in team.players) {
-    println("""
-                >       
-                >   Name: ${player.name.uppercase()}
-                >   Number: ${player.number}
-                >   Position: ${player.position.uppercase()}
-                >   Height: ${player.height} m
-                >   Weight: ${player.weight} kg
-                >   Nationality: ${player.nationality.uppercase()}
-                >   
-            """.trimMargin(">"))
-        }
-    }
+    println(ManagerAPI.listFullTeam())
 }
 
 
 
 
-
-
-fun playerSave() {
+fun TeamSave() {
     try {
         ManagerAPI.store()
     } catch (e: Exception) {
@@ -353,7 +318,7 @@ fun playerSave() {
     }
 }
 
-fun playerLoad() {
+fun TeamLoad() {
     try {
         ManagerAPI.load()
     } catch (e: Exception) {
