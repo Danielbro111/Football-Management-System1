@@ -16,65 +16,80 @@ import java.lang.System.exit
 private val logger = KotlinLogging.logger {}
 //private val ManagerAPI = ManagerAPI(XMLSerializer(File("TeamInformation .xml")))
 private val ManagerAPI = ManagerAPI(JSONSerializer(File("TeamInformation.json")))
+
 fun main() {
 
     playMenu()
-
 }
+
 ///Menus:
-fun mainMenu() : Int {
-    println()
-    println( """
-        > *********FOOTBALL MANAGEMENT SYSTEM*********         
-        > |                                          |
-        > | 1 -> Access Player Menu                  |                              
-        > | 2 -> Access Team Menu                    |
-        > |                                          |   
-        > | 0 -> Logout                              |
-        > |__________________________________________|  
-    """.trimMargin(">"))
-    return readNextInt(" > ==>>")
+
+fun mainMenu(): Int {
+    println(
+        """
+         |===============================================|
+         |           FOOTBALL MANAGEMENT SYSTEM          |
+         |===============================================|
+         |                                               |
+         |  1. Access Player Menu                        |
+         |  2. Access Team Menu                          |
+         |                                               |
+         |  0. Logout                                    |
+         |                                               |
+         |===============================================|
+        """.trimIndent())
+
+    return readNextInt("Enter your choice: ")
 }
 
-fun playerMenu() : Int {
-    println()
-    println( """
-        > ********FOOTBALL MANAGEMENT SYSTEM*********         
-        > |            ***Player Menu***             |
-        > | 1 -> Add a Player                        |
-        > | 2 -> Remove a Player                     |
-        > | 3 -> Show all Players                    |
-        > | 4 -> Show a player (Using Index Number)  |
-        > | 5 -> Update a Player                     |
-        > |                                          |
-        > | 6 -> Save a Player to the System         |
-        > | 7 -> Load a Player from the System       |
-        > |                                          |
-        > | 0 -> Return to the MainMenu              |                                                        
-        > |__________________________________________|  
-          """.trimMargin(">"))
-    return readNextInt(" > ==>>")
+fun playerMenu(): Int {
+    println("""
+        |===============================================|
+        |           FOOTBALL MANAGEMENT SYSTEM          |
+        |===============================================|
+        |              **** PLAYER MENU ****            |
+        |                                               |
+        |  1. Add a Player                              |
+        |  2. Remove a Player                           |
+        |  3. Show All Players                          |
+        |  4. Show a Player (Using Index Number)        |
+        |                                               |
+        |  5. Update a Player                           |
+        |  6. Save Players to the System                |
+        |  7. Load Players from the System              |
+        |                                               |
+        |  0. Return to the Main Menu                   |
+        |                                               |
+        |===============================================|
+    """.trimIndent())
+
+
+    return readNextInt("Enter your choice: ")
 }
 
-fun teamMenu() : Int {
-    println()
-    println( """
-        >  *******FOOTBALL MANAGEMENT SYSTEM********         
-        > |            ***Team Menu***              |
-        > | 1 -> Add your team                      |
-        > | 2 -> Remove your team                   |
-        > | 3 -> Show team info                     |
-        > | 4 -> Update your team                   |
-        > | 5 -> Add a player to your team          |
-        > | 6 -> Show all players on the team       |
-        > |                                         |
-        > | 7 -> Show team value                    |  
-        > | 8 -> Show the most expensive player     |                   
-        > |                                         |
-        > | 0 -> Return to the MainMenu             |
-        > |_________________________________________|                                       
-          """.trimMargin(">"))
-    return readNextInt(" > ==>>")
+fun teamMenu(): Int {
+    println("""
+        |===============================================|
+        |           FOOTBALL MANAGEMENT SYSTEM          |
+        |===============================================|
+        |              **** TEAM MENU ****              |
+        |                                               |
+        |  1. Add a Team                                |
+        |  2. Remove a Team                             |
+        |  3. Show Team Info                            |
+        |  4. Update a Team                             | 
+        |                                               |
+        |  5. Add a Player to a Team                    |
+        |  6. Show All Players in a Team                |
+        |                                               |
+        |  7. Show Team Value                           |
+        |  8. Show Most Expensive Player in Team        |
+        |                                               |
+        |  0. Return to the Main Menu                   |
+        |                                               |
+        |===============================================|
+    """.trimIndent())
+    return readNextInt("Enter your choice: ")
 }
 fun playMenu() {
     do {
@@ -337,6 +352,9 @@ fun MostExpensivePlayer() {
     println(ManagerAPI.getMostExpensivePlayerForTeam(teamIndex))
 }
 
+
+
+//Game Simulation:
 
 
 

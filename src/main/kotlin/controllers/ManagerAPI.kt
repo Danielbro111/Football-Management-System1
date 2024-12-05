@@ -11,8 +11,6 @@ class ManagerAPI(serializerType: Serializer) {
     private var serializer: Serializer = serializerType
 
 
-
-
     fun numberOfTeams() = teams.size
 
 
