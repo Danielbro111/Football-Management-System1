@@ -67,6 +67,7 @@ fun teamMenu() : Int {
         > | 4 -> Update your team                   |
         > | 5 -> Add a player to your team          |
         > | 6 -> Show all players on the team       |
+        > | 7 -> Show team value                    |                   
         > |                                         |
         > | 0 -> Return to the MainMenu             |
         > |_________________________________________|                                       
@@ -129,7 +130,8 @@ fun addPlayer() {
     val weight = readNextDouble("Enter the Players weight (Kilogram):")
     val position = readNextLine("Enter the Players position:")
     val nationality = readNextLine("Enter the Players nationality:")
-    val isAdded = ManagerAPI.addPlayer(Player(name, number, height, weight, position, nationality))
+    val value = readNextDouble("Enter the Players value (Million Euros):")
+    val isAdded = ManagerAPI.addPlayer(Player(name, number, height, weight, position, nationality,value))
     if (isAdded) {
         println("Player Added Successfully")
     } else {
@@ -201,6 +203,7 @@ fun doTeam() {
             4 -> updateTeam()
             5 -> addPlayerToTeam()
             6 -> listFullTeam()
+            7 -> showTeamValue()
 
             0 -> return
             else -> println(
@@ -255,8 +258,9 @@ private fun addPlayerToTeam() {
         val weight = readNextDouble("Enter the Player's weight (Kilograms):")
         val position = readNextLine("Enter the Player's position:")
         val nationality = readNextLine("Enter the Player's nationality:")
+        val value = readNextDouble("Enter the Players value (Million Euros):")
         
-        val player = Player(name, number, height, weight, position, nationality)
+        val player = Player(name, number, height, weight, position, nationality,value)
         val isAdded = ManagerAPI.addPlayerToTeam(team, player)
 
         if (isAdded) {
@@ -308,20 +312,36 @@ fun listFullTeam() {
 }
 
 
-
-
-fun TeamSave() {
-    try {
-        ManagerAPI.store()
-    } catch (e: Exception) {
-        System.err.println("Error writing to file: $e")
+fun showTeamValue() {
+    if (ManagerAPI.teams.isNotEmpty()) {
+        val totalValue = ManagerAPI.TeamTotalValue(0)
+        println()
+        println("The total value of the team is: $totalValue million Euros")
+        println()
+    } else {
+        println()
+        println("No team exists. Please create a team first.")
     }
 }
 
-fun TeamLoad() {
-    try {
-        ManagerAPI.load()
-    } catch (e: Exception) {
-        System.err.println("Error reading from file: $e")
+
+
+
+
+
+    fun TeamSave() {
+        try {
+            ManagerAPI.store()
+        } catch (e: Exception) {
+            System.err.println("Error writing to file: $e")
+        }
     }
-}
+
+    fun TeamLoad() {
+        try {
+            ManagerAPI.load()
+        } catch (e: Exception) {
+            System.err.println("Error reading from file: $e")
+        }
+    }
+
