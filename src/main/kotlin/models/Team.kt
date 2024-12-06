@@ -2,13 +2,14 @@ package ie.setu.models
 
 
 
-data class Team (
+data class Team(
     var tName: String,
     var manager: String,
     var captain: String,
     var league: String,
-    var trophies: Int,
-    var players : MutableSet<Player> = mutableSetOf(),
+    var trophies: Int = 0,
+    var teamStrength: Int = 0,
+    var players:  MutableSet<Player> = mutableSetOf(),
     var teamId: Int= 0,) {
 
 
