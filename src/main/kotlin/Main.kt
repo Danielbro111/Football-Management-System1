@@ -33,6 +33,7 @@ fun mainMenu(): Int {
          |                                               |
          |  1. Access Player Menu                        |
          |  2. Access Team Menu                          |
+         |  3. Game Simulation                           |
          |                                               |
          |  0. Logout                                    |
          |                                               |
@@ -80,7 +81,7 @@ fun teamMenu(): Int {
         |  4. Update a Team                             | 
         |                                               |
         |  5. Add a Player to a Team                    |
-        |  6. Show All Players in a Team                |
+        |  6. Show full team Info                       |            
         |                                               |
         |  7. Show Team Value                           |
         |  8. Show Most Expensive Player in Team        |
@@ -98,6 +99,7 @@ fun playMenu() {
 
             1 -> doPlayer()
             2 -> doTeam()
+            3 -> gameSimulation()
 
 
             0 -> logOut()
@@ -226,7 +228,7 @@ fun doTeam() {
             0 -> return
             else -> println(
                 """ |   Invalid option entered: $option
-                    |   Please enter a valid option (0-6)""".trimMargin()
+                    |   Please enter a valid option (0-8)""".trimMargin()
             )
         }
     } while (true)
@@ -238,7 +240,8 @@ fun doTeam() {
             val captain = readNextLine("Enter the Captains name:")
             val league = readNextLine("Enter current league name:")
             val trophies = readNextInt("Enter the amount of trophies theyve won:")
-            val isAdded = ManagerAPI.addTeam(Team(tName, manager, captain, league, trophies))
+            val teamStength = readNextInt("Enter the teams strength:")
+            val isAdded = ManagerAPI.addTeam(Team(tName, manager, captain, league, trophies,teamStength))
             if (isAdded) {
                 println("Team Added Successfully")
                 println()
@@ -251,12 +254,22 @@ fun doTeam() {
         }
 
 fun removeTeam() {
-    val isRemoved = ManagerAPI.removeTeam(0)
+    if (ManagerAPI.teams.isEmpty()) {
+        println("No teams available to remove.")
 
+    }
+    println("Available teams:")
+
+    for (i in ManagerAPI.teams.indices) {
+        println("$i: ${ManagerAPI.teams[i].tName}")
+    }
+
+    val teamIndex = readNextInt("Enter the index of the team you wish to remove: ")
+    val isRemoved = ManagerAPI.removeTeam(teamIndex)
     if (isRemoved != null) {
-        println("Team has been Removed Successfully")
+        println("Team '${isRemoved.tName}' has been removed successfully")
     } else {
-        println("Team failed to be removed")
+        println("Failed to remove the team. ")
     }
 }
 
@@ -266,112 +279,156 @@ fun removeTeam() {
         println(printTeam)
     }
 
+ fun addPlayerToTeam() {
+     if (ManagerAPI.teams.isNotEmpty()) {
+         println("No teams exist. Please create a team first.")
 
-private fun addPlayerToTeam() {
-    if (ManagerAPI.teams.isNotEmpty()) {
-        val team = ManagerAPI.teams[0]
-        val name = readNextLine("Enter the Player's name:")
-        val number = readNextInt("Enter the Player's number:")
-        val height = readNextDouble("Enter the Player's height (Metres):")
-        val weight = readNextDouble("Enter the Player's weight (Kilograms):")
-        val position = readNextLine("Enter the Player's position:")
-        val nationality = readNextLine("Enter the Player's nationality:")
-        val value = readNextDouble("Enter the Players value (Million Euros):")
-        
-        val player = Player(name, number, height, weight, position, nationality,value)
-        val isAdded = ManagerAPI.addPlayerToTeam(team, player)
+     }
+         println("Available teams:")
+         for (i in ManagerAPI.teams.indices) {
+             println("$i: ${ManagerAPI.teams[i].tName}")
+         }
+         println()
 
-        if (isAdded) {
-            println("Player added to team successfully!")
-            println()
-            logger.info {
-                val manager = team.manager
-                """Player added: ${name.uppercase()} 
+         val teamIndex = readNextInt("Enter the index of the team you wish to add a player to: ")
+         val team = ManagerAPI.teams[teamIndex]
+         val name = readNextLine("Enter the Player's name:")
+         val number = readNextInt("Enter the Player's number:")
+         val height = readNextDouble("Enter the Player's height (Metres):")
+         val weight = readNextDouble("Enter the Player's weight (Kilograms):")
+         val position = readNextLine("Enter the Player's position:")
+         val nationality = readNextLine("Enter the Player's nationality:")
+         val value = readNextDouble("Enter the Players value (Million Euros):")
+
+         val player = Player(name, number, height, weight, position, nationality, value)
+         val isAdded = ManagerAPI.addPlayerToTeam(team, player)
+
+         if (isAdded) {
+             println("Player added to team successfully!")
+             println()
+             logger.info {
+                 val manager = team.manager
+                 """Player added: ${name.uppercase()} 
                    Added by Manager: ${manager.uppercase()}
                    Added to Team: ${team.tName.uppercase()}
-                """ }
-        } else {
-            println("Failed to add player to team")
-        }
-    } else {
-        println("No team exists. Please create a team first.")
-    }
-}
+                """
+             }
+         } else {
+             println("Failed to add player to team")
 
-fun updateTeam() {
-    if (ManagerAPI.teams.isEmpty()) {
-        println("No teams found.")
-        return
-    }
-    listTeam()
-    println("Enter new team details:")
-    val tName = readNextLine("Enter the team's new name:")
-    val manager = readNextLine("Enter the new Manager's name:")
-    val captain = readNextLine("Enter the new Captain's name:")
-    val league = readNextLine("Enter new league name:")
-    val trophies = readNextInt("Enter the new amount of trophies they've won:")
+         } }
 
-    val updatedTeam = Team(tName, manager, captain, league, trophies)
-    val isUpdated = ManagerAPI.updateTeam(0, updatedTeam)
 
-    if (isUpdated) {
-        println("Team updated successfully!")
-        println()
-        logger.info { """Team updated: $tName 
+     fun updateTeam() {
+         if (ManagerAPI.teams.isEmpty()) {
+             println("No teams found.")
+             return
+         }
+         listTeam()
+         println("Enter new team details:")
+         val tName = readNextLine("Enter the team's new name:")
+         val manager = readNextLine("Enter the new Manager's name:")
+         val captain = readNextLine("Enter the new Captain's name:")
+         val league = readNextLine("Enter new league name:")
+         val trophies = readNextInt("Enter the new amount of trophies they've won:")
+
+         val updatedTeam = Team(tName, manager, captain, league, trophies)
+         val isUpdated = ManagerAPI.updateTeam(0, updatedTeam)
+
+         if (isUpdated) {
+             println("Team updated successfully!")
+             println()
+             logger.info {
+                 """Team updated: $tName 
                    Updated by Manager: $manager
-                      """ }
-    } else {
-        println("Failed to update team.")
-    }
-}
+                      """
+             }
+         } else {
+             println("Failed to update team.")
+         }
+     }
 
-fun listFullTeam() {
-    println(ManagerAPI.listFullTeam())
-}
-
-
-fun showTeamValue() {
-    if (ManagerAPI.teams.isNotEmpty()) {
-        val totalValue = ManagerAPI.TeamTotalValue(0)
-        println()
-        println("The total value of the team is: $totalValue million Euros")
-        println()
-    } else {
-        println()
-        println("No team exists. Please create a team first.")
-    }
-}
+     fun listFullTeam() {
+         println(ManagerAPI.listFullTeam())
+     }
 
 
-fun MostExpensivePlayer() {
-    if (ManagerAPI.teams.isEmpty()) {
-        println("No teams available.")
-        return
-    }
-    val teamIndex = readNextInt("Enter the index of the team: ")
-    println(ManagerAPI.getMostExpensivePlayerForTeam(teamIndex))
-}
+     fun showTeamValue() {
+         if (ManagerAPI.teams.isNotEmpty()) {
+             for (i in ManagerAPI.teams.indices) {
+                 println("$i: ${ManagerAPI.teams[i].tName}")
+             }
+             println()
 
+             val index = readNextInt("Enter the index of the team: ")
+             val totalValue = ManagerAPI.TeamTotalValue(index)
+             println()
+             println("The total value of the team is: $totalValue million Euros")
+             println()
+         } else {
+             println()
+             println("No team exists. Please create a team first.")
+         }
+     }
+
+
+     fun MostExpensivePlayer() {
+         if (ManagerAPI.teams.isEmpty()) {
+             println("No teams available.")
+             return
+         }
+         val teamIndex = readNextInt("Enter the index of the team: ")
+         println(ManagerAPI.getMostExpensivePlayerForTeam(teamIndex))
+     }
 
 
 //Game Simulation:
 
+     //EVERYTHING IS SET UP TROPHIES,TEAM STRENGTH AND VALUE TO DETERMINE THE WINNER
+     fun gameSimulation() {
+         if (ManagerAPI.teams.size < 2) {
+             println("Please add at least two teams to play a game")
+             return
+         }
+
+         println("Available teams:")
+         for (i in ManagerAPI.teams.indices) {
+             println("$i: ${ManagerAPI.teams[i].tName}")
+         }
+
+         val team1Index = readNextInt("Enter the index of the first team: ")
+         val team2Index = readNextInt("Enter the index of the second team: ")
+
+         if (team1Index == team2Index) {
+             println("Please select two different teams.")
+             return
+         }
+
+         val result = ManagerAPI.simulateGame(team1Index, team2Index)
+         println(result)
+
+     }
+
+
+//Saving and Loading:
+
+     fun TeamSave() {
+         try {
+             ManagerAPI.store()
+         } catch (e: Exception) {
+             System.err.println("Error writing to file: $e")
+         }
+     }
+
+     fun TeamLoad() {
+         try {
+             ManagerAPI.load()
+         } catch (e: Exception) {
+             System.err.println("Error reading from file: $e")
+         }
+     }
 
 
 
-    fun TeamSave() {
-        try {
-            ManagerAPI.store()
-        } catch (e: Exception) {
-            System.err.println("Error writing to file: $e")
-        }
-    }
 
-    fun TeamLoad() {
-        try {
-            ManagerAPI.load()
-        } catch (e: Exception) {
-            System.err.println("Error reading from file: $e")
-        }
-    }
 

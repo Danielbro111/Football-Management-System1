@@ -1,9 +1,10 @@
 package controllers
 
+
 import ie.setu.models.Player
 import ie.setu.models.Team
 import persistence.Serializer
-
+import utils.readNextInt
 
 class ManagerAPI(serializerType: Serializer) {
     var players = ArrayList<Player>()
@@ -16,6 +17,7 @@ class ManagerAPI(serializerType: Serializer) {
 
     fun TeamTotalValue(index: Int): Double {
         return if (isValidListIndex(index, teams)) {
+
             teams[index].calculateTeamValue()
         } else {
             0.0
@@ -150,8 +152,8 @@ class ManagerAPI(serializerType: Serializer) {
             var listAllTeams = ""
             for (team in teams) {
                 listAllTeams += """
-                    
-       |*** Team Information ***
+       |             
+       |*** Team Information ***             
        | Team Name: ${team.tName.uppercase()}                        
        | Manager: ${team.manager.uppercase()}                        
        | Captain: ${team.captain.uppercase()}                        
@@ -166,11 +168,11 @@ class ManagerAPI(serializerType: Serializer) {
     }
 
 
-fun findTeam(index: Int): Team? {
-    return if (isValidListIndex(index, teams)) {
-        teams[index]
-    } else null
-}
+    fun findTeam(index: Int): Team? {
+        return if (isValidListIndex(index, teams)) {
+            teams[index]
+        } else null
+    }
 
     fun addPlayerToTeam(team: Team, player: Player): Boolean {
         team.addPlayer(player)
@@ -178,13 +180,22 @@ fun findTeam(index: Int): Team? {
     }
 
     fun listFullTeam() {
-        if(teams.isEmpty()) {
+        if (teams.isEmpty()) {
             println("No teams found.")
             return
         }
+        for (i in teams.indices) {
+            println("$i: ${teams[i].tName}")
+        }
+        println()
 
-        val team = teams[0]
-        println("""
+
+        val teamIndex = readNextInt("Enter the index of the team you want to list: ")
+
+        val team =  teams[teamIndex]
+
+        println(
+            """
            > ***    Team Information    ***
            > Team Name: ${team.tName.uppercase()}
            > Manager: ${team.manager.uppercase()}
@@ -194,13 +205,15 @@ fun findTeam(index: Int): Team? {
            > Number of players: ${team.players.size}
            >
            > Players:
-""".trimMargin(">"))
+""".trimMargin(">")
+        )
 
         if (team.players.isEmpty()) {
             println("> No players are in the team.")
         } else {
             for (player in team.players) {
-                println("""
+                println(
+                    """
                 >       
                 >   Name: ${player.name.uppercase()}
                 >   Number: ${player.number}
@@ -209,25 +222,54 @@ fun findTeam(index: Int): Team? {
                 >   Weight: ${player.weight} kg
                 >   Nationality: ${player.nationality.uppercase()}
                 >   
-            """.trimMargin(">"))
+            """.trimMargin(">")
+                )
             }
         }
     }
 
-
-
-
-    @Throws(Exception::class)
-    fun load() {
-        players = serializer.read() as ArrayList<Player>
-        teams = serializer.read() as ArrayList<Team>
-        println("loaded successfully.")
+     fun calculateTeamScore(team: Team): Int {
+        return team.teamStrength * team.trophies * team.calculateTeamValue().toInt()
     }
 
-    @Throws(Exception::class)
-    fun store() {
-        serializer.write(players)
-        serializer.write(teams)
-        println("saved successfully.")
+    fun simulateGame(team1Index: Int, team2Index: Int): Any {
+        val team1 = teams[team1Index]
+        val team2 = teams[team2Index]
+
+        val team1Score = calculateTeamScore(team1)
+        val team2Score = calculateTeamScore(team2)
+
+        return """
+                        **Game Simulation**
+            ${team1.tName.uppercase()} vs ${team2.tName.uppercase()}
+            
+            ${team1.tName.uppercase()} Scored $team1Score points!
+            ${team2.tName.uppercase()} Scored $team2Score points!
+            
+                          **Final Result**
+           ${
+            if (team1Score > team2Score) "${team1.tName} wins!"
+            else if (team2Score > team1Score) "${team2.tName} wins!"
+            else "It's a draw!"
+        }
+        """.trimIndent()
     }
-}
+
+
+            @Throws(Exception::class)
+            fun load() {
+                players = serializer.read() as ArrayList<Player>
+                teams = serializer.read() as ArrayList<Team>
+                println("loaded successfully.")
+            }
+
+            @Throws(Exception::class)
+            fun store() {
+                serializer.write(players)
+                serializer.write(teams)
+                println("saved successfully.")
+            }
+        }
+    
+
+
