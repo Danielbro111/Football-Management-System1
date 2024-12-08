@@ -11,4 +11,7 @@ Teams can also be persisted to files in the following formats:
    - XML Format
    - JSON Format
 
+ ## Project Purpose 
+ The purpose of this app is to allow football fans a chance to become the manager of football teams and build their favourite IRL teams or create new fantasy teams.This app is very 
+ interactive with lots of fun abilities along with a built in game.This app also gives the option of saving all player info to a file, this file is also accessible externally/outside the console  which is useful for coaches and managers alike to log and save player info.
  
