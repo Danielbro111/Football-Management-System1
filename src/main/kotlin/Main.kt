@@ -147,7 +147,7 @@ fun teamMenu(): Int {
         |  4.  Update a Team                             | 
         |                                                |
         |  5.  Add a Player to a Team                    |
-        |  6.  Show full team Info                       |            
+        |  6.  Show all teams Info                       |            
         |                                                |
         |  7.  Show Team Value                           |
         |  8.  Show Most Expensive Player in Team        |
@@ -249,9 +249,13 @@ fun addPlayer() {
     val value = readNextDouble("Enter the Players value (Million Euros):")
     val isAdded = ManagerAPI.addPlayer(Player(name, number, height, weight, position, nationality, value))
     if (isAdded) {
+        println()
         println("Player Added Successfully")
+        println()
     } else {
+        println()
         println("Player Add Failed")
+        println()
     }
 }
 
@@ -260,7 +264,9 @@ fun removePlayer() {
     val isRemoved = ManagerAPI.removePlayer(index)
 
     if (isRemoved != null) {
+        println()
         println("Player Removed Successfully")
+        println()
     }
 }
 
@@ -357,6 +363,7 @@ fun addTeam() {
     val teamStength = readNextInt("Enter the teams strength:")
     val isAdded = ManagerAPI.addTeam(Team(tName, manager, captain, league, trophies, teamStength))
     if (isAdded) {
+        println()
         println("Team Added Successfully")
         println()
         logger.info {
@@ -365,7 +372,9 @@ fun addTeam() {
                               """
         }
     } else {
+        println()
         println("Team  failed to be added")
+        println()
     }
 }
 
@@ -378,20 +387,26 @@ fun removeTeam() {
     for (i in ManagerAPI.teams.indices) {
         println("$i: ${ManagerAPI.teams[i].tName}")
     }
-
+    println()
     val teamIndex = readNextInt("Enter the index of the team you wish to remove: ")
     val isRemoved = ManagerAPI.removeTeam(teamIndex)
     if (isRemoved != null) {
+        println()
         println("Team '${isRemoved.tName}' has been removed successfully")
+        println()
     } else {
+        println()
         println("Failed to remove the team. ")
+        println()
     }
 }
 
 fun listTeam() {
     val printTeam = ManagerAPI.listTeam()
 
+    println()
     println(printTeam)
+    println()
 }
 
 fun addPlayerToTeam() {
@@ -418,6 +433,7 @@ fun addPlayerToTeam() {
     val isAdded = ManagerAPI.addPlayerToTeam(team, player)
 
     if (isAdded) {
+        println()
         println("Player added to team successfully!")
         println()
         logger.info {
@@ -428,6 +444,7 @@ fun addPlayerToTeam() {
                 """
         }
     } else {
+        println()
         println("Failed to add player to team")
     }
 }
@@ -437,7 +454,13 @@ fun updateTeam() {
         println("No teams found.")
         return
     }
-    listTeam()
+    for (i in ManagerAPI.teams.indices) {
+        println("$i: ${ManagerAPI.teams[i].tName}" )
+
+    }
+
+    println()
+    val Index = readNextInt("Enter the index of the team you wish to add a player to: ")
     println("Enter new team details:")
     val tName = readNextLine("Enter the team's new name:")
     val manager = readNextLine("Enter the new Manager's name:")
@@ -446,7 +469,7 @@ fun updateTeam() {
     val trophies = readNextInt("Enter the new amount of trophies they've won:")
 
     val updatedTeam = Team(tName, manager, captain, league, trophies)
-    val isUpdated = ManagerAPI.updateTeam(0, updatedTeam)
+    val isUpdated = ManagerAPI.updateTeam(Index, updatedTeam)
 
     if (isUpdated) {
         println("Team updated successfully!")

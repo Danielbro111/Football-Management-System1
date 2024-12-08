@@ -302,15 +302,17 @@ class ManagerAPI(serializerType: Serializer) {
             var listAllTeams = ""
             for (team in teams) {
                 listAllTeams += """
-       |             
+                  
+       
        |*** Team Information ***             
-       | Team Name: ${team.tName.uppercase()}                        
-       | Manager: ${team.manager.uppercase()}                        
-       | Captain: ${team.captain.uppercase()}                        
-       | League: ${team.league.uppercase()}                          
-       | Trophies: ${team.trophies}    
-       | Number of players: ${numberOfPlayers()}            
-                """.trimIndent()
+       |Team Name: ${team.tName.uppercase()}                        
+       |Manager: ${team.manager.uppercase()}                        
+       |Captain: ${team.captain.uppercase()}                        
+       |League: ${team.league.uppercase()}                          
+       |Trophies: ${team.trophies}    
+       |Number of players: ${numberOfPlayers()}            
+                """.trimMargin()
+                println()
             }
             println()
             listAllTeams
