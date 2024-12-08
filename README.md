@@ -1,6 +1,6 @@
 # Football Management Console System
 
-**Console Football Management app written in Kotlin**
+Console Football Management app written in Kotlin
 
 ##
 Football Management System is a Kotlin-based app designed to manage football teams and players. This system provides users with the ability to create, read, update, and delete (CRUD) football teams and players, along with a built-in game simulator.
