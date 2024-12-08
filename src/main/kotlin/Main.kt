@@ -147,7 +147,7 @@ fun teamMenu(): Int {
         |  4.  Update a Team                             | 
         |                                                |
         |  5.  Add a Player to a Team                    |
-        |  6.  Show all teams Info                       |            
+        |  6.  Show all teams Information                |            
         |                                                |
         |  7.  Show Team Value                           |
         |  8.  Show Most Expensive Player in Team        |
